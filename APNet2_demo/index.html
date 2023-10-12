@@ -1,0 +1,651 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="index.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Zero-shot FaceVC</title>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-156162365-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-156162365-1');
+    </script>
+</head>
+
+<body>
+
+    <!-- Title -->
+    <div class="container" style="max-width:1200px;">
+        <div class='row mt-5 mb-3'>
+            <div class='col text-center'>
+                <p class="h3 font-weight-normal">Face-Driven Zero-Shot Voice Conversion with Memory-based
+                    Face-Voice Alignment</p>
+            </div>
+        </div>
+    </div>
+    <div class="container" style="max-width:1100px;">
+        <!-- authors -->
+        <div class='row text-center h5 font-weight-normal pl-0 pr-0 mb-4' style="font-style:italic">
+                <a class="col-md-2 col-xs-4 text-dark" style='margin:auto;' ><span>Zhengyan Sheng</span></a>
+                <a class="col-md-2 col-xs-4 text-dark" style='margin:auto;'><span>Yang Ai</span></a>
+                <a class="col-md-2 col-xs-4 text-dark" style='margin:auto;'><span>Yannian Chen</span></a>
+                <a class="col-md-2 col-xs-4 text-dark" style='margin:auto;'><span>Zhenhua Ling*</span></a>
+        </div>
+
+        <div>
+            <hr>
+            <div class='col text-center'>
+                <p class='h4 font-weight-bold '>Abstract</p>
+
+                <div class="container" style="max-width:1100px; margin-top: 20px; margin-bottom: 40px">
+                    <p style='line-height:1.3; font-size:large; text-align: justify'>
+                        This paper presents a novel task, zero-shot voice conversion based
+                        on face images (zero-shot FaceVC), which aims at converting the
+                        voice characteristics of an utterance from any source speaker to a
+                        newly coming target speaker, solely relying on a single face image
+                        of the target speaker. To address this task, we propose a face-voice
+                        memory-based zero-shot FaceVC method. This method leverages a
+                        memory-based face-voice alignment module, in which slots act as
+                        the bridge to align these two modalities, allowing for the capture of
+                        voice characteristics from face images. A mixed supervision strategy
+                        is also introduced to mitigate the long-standing issue of the inconsistency between training and inference phases for voice conversion
+                        tasks. To obtain speaker-independent content-related representations, we transfer the knowledge from a pretrained zero-shot voice
+                        conversion model to our zero-shot FaceVC model. Considering
+                        the differences between FaceVC and traditional voice conversion
+                        tasks, systematic subjective and objective metrics are designed to
+                        thoroughly evaluate the homogeneity, diversity and consistency
+                        of voice characteristics controlled by face images. Through extensive experiments, we demonstrate the superiority of our proposed
+                        method on the zero-shot FaceVC task. 
+                    </p>
+                    <p style='line-height:1.3; font-size:large; text-align: justify'>
+                        Released Code: <a target="_blank" rel="noopener" href="https://github.com/Levent9/Zero-shot-FaceVC">https://github.com/Levent9/Zero-shot-FaceVC</a>
+                    </p>
+                    <p><img align="center" src="resources/overall.svg" alt="SVG Image" style="  display: block ;
+                        margin-left: auto;
+                        margin-right: auto;
+                        width: 100%;"></p>
+                </div>
+            </div>
+        </div>
+        <!-- Audio Samples -->
+        <div class='col'>
+            <hr>
+            <div class='row text-center'>
+                <div class='col'>
+                    <p class='h4 font-weight-bold '>Converted Utterance Examples</p>
+                </div>           
+            </div>
+            <!-- <div class='col text-center'> -->
+            <!-- <div> -->
+                <!-- <div class="container" style="max-width:850px; margin-top: 20px; margin-bottom: 10px"> -->
+                    <!-- <p style='line-height:1.3; font-size:large; text-align: justify'> -->
+                    <!-- <p class='h5'> -->
+                        <!-- 1.Converted utterances by the different systems. -->
+                    <!-- </p> -->
+                <!-- </div> -->
+            <!-- </div> -->
+
+        <div class='row' style='margin-top: 20px; margin-bottom: 0px;'>
+            <p class='h5'>1. Converted utterances by the different systems.</p>
+        </div>  
+
+        <div class='row' style='margin-top: 20px; margin-bottom: 0px;'>
+            <p class='h6'>Sample 1</p>
+        </div>       
+        
+        <table align = "center" style="text-align: center;">
+
+            <tr>
+            <td style="text-align: center;">Source speaker </td>
+            <td style="text-align: center;">Target Speaker</td>
+            
+            </tr>
+        
+            <tr>
+            <td><img src="resources/image/mgcj_00002.jpg"></td>
+            <td><img src="resources/image/7kkR_00003.jpg"></td>
+            </tr>
+
+            <tr>
+                <td style="text-align: center;">Source utterance</td>
+                <td style="text-align: center;">Reference utterance</td>
+            </tr>
+
+            <tr>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 250px; height: 50px;'><source src="resources/wav/1/ref_sour_wav/7kkR_00003_mgcj_00008_M2F_src_gen.wav" type="audio/wav"></audio></td>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 250px; height: 50px;'><source src="resources/wav/1/ref_sour_wav/7kkR_00003_mgcj_00008_M2F_ref_gen.wav"></audio></td>
+            </tr>
+
+        </table>
+        <table align = "center" style="text-align: center;">
+            <tr>
+                <td></td>
+                <td style="text-align: center;">SpeechVC</td>
+                <td style="text-align: center;">Auto-FaceVC</td>
+                <td style="text-align: center;">attentionCVAE</td>
+                <td style="text-align: center;">FVMVC</td>
+            </tr>
+
+            <tr>
+            <td style="text-align: center;">Converted utterance</td>
+            <td><audio controls="" style='display: inline-block; padding:8px; width: 250px; height: 50px;'><source src="resources/wav/1/SpeechVC/7kkR_00003_mgcj_00008_M2F_gen.wav" type="audio/wav"></audio></td>
+            <td><audio controls="" style='display: inline-block; padding:8px; width: 250px; height: 50px;'><source src="resources/wav/1/Auto-FaceVC/7kkR_00003_mgcj_00008_M2F_gen.wav"  type="audio/wav"></audio></td>
+            <td><audio controls="" style='display: inline-block; padding:8px; width: 250px; height: 50px;'><source src="resources/wav/1/attentionCVAE/7kkR_00003_mgcj_00008_M2F_gen.wav" type="audio/wav"></audio></td>
+            <td><audio controls="" style='display: inline-block; padding:8px; width: 250px; height: 50px;'><source src="resources/wav/1/FVMVC/7kkR_00003_mgcj_00008_M2F_gen.wav"  type="audio/wav"></audio></td>
+            </tr>
+        
+        </table>
+        
+        <br>
+        <!-- <div class='row' style='margin-top: 20px; margin-bottom: 0px;'>
+            <p class='h4'>2</p>
+        </div>     -->
+        <div class='row' style='margin-top: 20px; margin-bottom: 0px;'>
+            <p class='h6'>Sample 2</p>
+        </div>       
+        </div>
+
+        <table align = "center"  style="text-align: center;">
+
+            <tr>
+            <td style="text-align: center;">Source Speaker</td>
+            <td style="text-align: center;">Target Speaker</td>
+            </tr>
+        
+            <tr>
+            <td><img src="resources/image/ZJNE_00047.jpg"></td>
+            <td><img src="resources/image/9uOM_00001.jpg"></td>
+            </tr>
+        
+            <tr>
+                <td style="text-align: center;">Source utterance</td>
+                <td style="text-align: center;">Reference utterance</td>
+            </tr>
+
+            <tr>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 250px; height: 50px;'><source src="resources/wav/1/ref_sour_wav/9uOM_00001_ZJNE_00047_F2M_src_gen.wav" type="audio/wav"></audio></td>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 250px; height: 50px;'><source src="resources/wav/1/ref_sour_wav/9uOM_00001_ZJNE_00047_F2M_ref_gen.wav"></audio></td>
+            </tr>
+
+        </table>
+        <table align = "center" style="text-align: center;">
+            <tr>
+                <td></td>
+                <td style="text-align: center;">SpeechVC</td>
+                <td style="text-align: center;">Auto-FaceVC</td>
+                <td style="text-align: center;">attentionCVAE</td>
+                <td style="text-align: center;">FVMVC</td>
+            </tr>
+
+            <tr>
+            <td style="text-align: center;">Converted utterance</td>
+            <td><audio controls="" style='display: inline-block; padding:8px; width: 250px; height: 50px;'><source src="resources/wav/1/SpeechVC/9uOM_00001_ZJNE_00047_F2M_gen.wav" type="audio/wav"></audio></td>
+            <td><audio controls="" style='display: inline-block; padding:8px; width: 250px; height: 50px;'><source src="resources/wav/1/Auto-FaceVC/9uOM_00001_ZJNE_00047_F2M_gen.wav"  type="audio/wav"></audio></td>
+            <td><audio controls="" style='display: inline-block; padding:8px; width: 250px; height: 50px;'><source src="resources/wav/1/attentionCVAE/9uOM_00001_ZJNE_00047_F2M_gen.wav" type="audio/wav"></audio></td>
+            <td><audio controls="" style='display: inline-block; padding:8px; width: 250px; height: 50px;'><source src="resources/wav/1/FVMVC/9uOM_00001_ZJNE_00047_F2M_gen.wav"  type="audio/wav"></audio></td>
+            </tr>
+        
+        </table>
+
+        <br>
+
+        <!-- <div class='row' style='margin-top: 20px; margin-bottom: 0px;'>
+            <p class='h4'>3</p>
+        </div>     -->
+        <div class='row' style='margin-top: 20px; margin-bottom: 0px;'>
+            <p class='h6'>Sample 3</p>   
+        </div>
+        <table align = "center" style="text-align: center;">
+
+            <tr>
+            <td style="text-align: center;">Source Speaker</td>
+            <td style="text-align: center;">Target Speaker</td>
+            </tr>
+        
+            <tr>
+            <td><img src="resources/image/UAj1_00011.jpg"></td>
+            <td><img src="resources/image/81Ub_00003.jpg"></td>
+            </tr>
+        
+            <tr>
+                <td style="text-align: center;">Source utterance</td>
+                <td style="text-align: center;">Reference utterance</td>
+            </tr>
+
+            <tr>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 250px; height: 50px;'><source src="resources/wav/1/ref_sour_wav/81Ub_00003_UAj1_00011_F2M_src_gen.wav" type="audio/wav"></audio></td>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 250px; height: 50px;'><source src="resources/wav/1/ref_sour_wav/81Ub_00003_UAj1_00011_F2M_ref_gen.wav"></audio></td>
+            </tr>
+
+        </table>
+        <table align = "center" style="text-align: center;">
+            <tr>
+                <td></td>
+                <td style="text-align: center;">SpeechVC</td>
+                <td style="text-align: center;">Auto-FaceVC</td>
+                <td style="text-align: center;">attentionCVAE</td>
+                <td style="text-align: center;">FVMVC</td>
+            </tr>
+            
+            <tr>
+            <td style="text-align: center;">Converted utterance</td>
+            <td><audio controls="" style='display: inline-block; padding:8px; width: 250px; height: 50px;'><source src="resources/wav/1/SpeechVC/81Ub_00003_UAj1_00011_F2M_gen.wav" type="audio/wav"></audio></td>
+            <td><audio controls="" style='display: inline-block; padding:8px; width: 250px; height: 50px;'><source src="resources/wav/1/Auto-FaceVC/81Ub_00003_UAj1_00011_F2M_gen.wav"  type="audio/wav"></audio></td>
+            <td><audio controls="" style='display: inline-block; padding:8px; width: 250px; height: 50px;'><source src="resources/wav/1/attentionCVAE/81Ub_00003_UAj1_00011_F2M_gen.wav" type="audio/wav"></audio></td>
+            <td><audio controls="" style='display: inline-block; padding:8px; width: 250px; height: 50px;'><source src="resources/wav/1/FVMVC/81Ub_00003_UAj1_00011_F2M_gen.wav"  type="audio/wav"></audio></td>
+            </tr>
+        
+        </table>
+        <br>
+
+        <div class='row' style='margin-top: 20px; margin-bottom: 0px;'>
+            <p class='h6'>Sample 4</p>
+        </div>       
+
+        <table align = "center"  style="text-align: center;">
+
+            <tr>
+            <td style="text-align: center;">Source Speaker</td>
+            <td style="text-align: center;">Target Speaker</td>
+            </tr>
+        
+            <tr>
+            <td><img src="resources/image/ZJNE_00047.jpg"></td>
+            <td><img src="resources/image/FFG2_00005.jpg"></td>
+            </tr>
+        
+            <tr>
+                <td style="text-align: center;">Source utterance</td>
+                <td style="text-align: center;">Reference utterance</td>
+            </tr>
+
+            <tr>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 250px; height: 50px;'><source src="resources/wav/1/ref_sour_wav/FFG2_00005_ZJNE_00027_F2M_src_gen.wav" type="audio/wav"></audio></td>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 250px; height: 50px;'><source src="resources/wav/1/ref_sour_wav/FFG2_00005_ZJNE_00027_F2M_ref_gen.wav"></audio></td>
+            </tr>
+
+        </table>
+        <table align = "center" style="text-align: center;">
+            <tr>
+                <td></td>
+                <td style="text-align: center;">SpeechVC</td>
+                <td style="text-align: center;">Auto-FaceVC</td>
+                <td style="text-align: center;">attentionCVAE</td>
+                <td style="text-align: center;">FVMVC</td>
+            </tr>
+
+            <tr>
+            <td style="text-align: center;">Converted utterance</td>
+            <td><audio controls="" style='display: inline-block; padding:8px; width: 250px; height: 50px;'><source src="resources/wav/1/SpeechVC/FFG2_00005_ZJNE_00027_F2M_gen.wav" type="audio/wav"></audio></td>
+            <td><audio controls="" style='display: inline-block; padding:8px; width: 250px; height: 50px;'><source src="resources/wav/1/Auto-FaceVC/FFG2_00005_ZJNE_00027_F2M_gen.wav"  type="audio/wav"></audio></td>
+            <td><audio controls="" style='display: inline-block; padding:8px; width: 250px; height: 50px;'><source src="resources/wav/1/attentionCVAE/FFG2_00005_ZJNE_00027_F2M_gen.wav" type="audio/wav"></audio></td>
+            <td><audio controls="" style='display: inline-block; padding:8px; width: 250px; height: 50px;'><source src="resources/wav/1/FVMVC/FFG2_00005_ZJNE_00027_F2M_gen.wav"  type="audio/wav"></audio></td>
+            </tr>
+        
+        </table>
+
+            <div style='margin-top:40px'>
+                <hr>
+
+
+            
+            <div class='row' style='margin-top: 20px; margin-bottom: 0px;'>
+                <p class='h5'>2. Converted utterances by the different face images of the same target speaker.</p>
+            </div>  
+
+            <div class='row' style='margin-top: 20px; margin-bottom: 0px;'>
+                <p class='h6'>Sample 1</p>
+            </div>    
+
+            <table stype='width:80%' style="text-align: center;">
+
+                <tr>
+                <td style="text-align: center;">Source Speaker</td>
+                <td style="text-align: center;">Target Speaker Image1</td>
+                <td style="text-align: center;">Target Speaker Image2</td>
+                <td style="text-align: center;">Target Speaker Image3</td>
+                </tr>
+            
+                <tr>
+                <td><img src="resources/image/mgcj_00002.jpg"></td>
+                <td><img src="resources/image/81Ub_00001.jpg"></td>
+                <td><img src="resources/image/81Ub_00002.jpg"></td>
+                <td><img src="resources/image/81Ub_00003.jpg"></td>
+                </tr>
+            
+                <tr>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/wav/2/ref_sour_wav/81Ub_00001_mgcj_00008_M2M_src_gen.wav" type="audio/wav"></audio></td>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/wav/2/FVMVC/81Ub_00001_mgcj_00008_M2M_gen.wav" type="audio/wav"></audio></td>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/wav/2/FVMVC/81Ub_00002_mgcj_00008_M2M_gen.wav" type="audio/wav"></audio></td>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/wav/2/FVMVC/81Ub_00003_mgcj_00008_M2M_gen.wav" type="audio/wav"></audio></td>
+                </tr>
+            
+            
+                <tr>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/wav/2/ref_sour_wav/81Ub_00001_mgcj_00015_M2M_src_gen.wav" type="audio/wav"></audio></td>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/wav/2/FVMVC/81Ub_00001_mgcj_00015_M2M_gen.wav" type="audio/wav"></audio></td>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/wav/2/FVMVC/81Ub_00002_mgcj_00015_M2M_gen.wav" type="audio/wav"></audio></td>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/wav/2/FVMVC/81Ub_00003_mgcj_00015_M2M_gen.wav" type="audio/wav"></audio></td>
+                </tr>
+            
+            
+                <tr>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/wav/2/ref_sour_wav/81Ub_00001_mgcj_00002_M2M_src_gen.wav" type="audio/wav"></audio></td>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/wav/2/FVMVC/81Ub_00001_mgcj_00002_M2M_gen.wav" type="audio/wav"></audio></td>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/wav/2/FVMVC/81Ub_00002_mgcj_00002_M2M_gen.wav" type="audio/wav"></audio></td>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/wav/2/FVMVC/81Ub_00003_mgcj_00002_M2M_gen.wav" type="audio/wav"></audio></td>
+                </tr>
+                </table>
+            
+                <br>
+
+
+            <!-- <div class='row' style='margin-top: 20px; margin-bottom: 0px;'>
+                <p class='h4'>2</p>
+            </div>         -->
+            <div class='row' style='margin-top: 20px; margin-bottom: 0px;'>
+                <p class='h6'>Sample 2</p>
+            </div>   
+
+            <table stype='width:80%' style="text-align: center;">
+
+                <tr>
+                <td style="text-align: center;">Source Speaker</td>
+                <td style="text-align: center;">Target Speaker Image1</td>
+                <td style="text-align: center;">Target Speaker Image2</td>
+                <td style="text-align: center;">Target Speaker Image3</td>
+                </tr>
+            
+                <tr>
+                <td><img src="resources/image/mgcj_00002.jpg"></td>
+                <td><img src="resources/image/YzGj_00005.jpg"></td>
+                <td><img src="resources/image/YzGj_00006.jpg"></td>
+                <td><img src="resources/image/YzGj_00013.jpg"></td>
+                </tr>
+            
+                <tr>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/wav/2/ref_sour_wav/YzGj_00005_mgcj_00008_M2F_src_gen.wav" type="audio/wav"></audio></td>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/wav/2/FVMVC/YzGj_00005_mgcj_00008_M2F_gen.wav" type="audio/wav"></audio></td>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/wav/2/FVMVC/YzGj_00006_mgcj_00008_M2F_gen.wav" type="audio/wav"></audio></td>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/wav/2/FVMVC/YzGj_00013_mgcj_00008_M2F_gen.wav" type="audio/wav"></audio></td>
+                </tr>
+            
+            
+                <tr>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/wav/2/ref_sour_wav/81Ub_00001_mgcj_00015_M2M_src_gen.wav" type="audio/wav"></audio></td>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/wav/2/FVMVC/YzGj_00005_mgcj_00015_M2F_gen.wav" type="audio/wav"></audio></td>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/wav/2/FVMVC/YzGj_00006_mgcj_00015_M2F_gen.wav" type="audio/wav"></audio></td>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/wav/2/FVMVC/YzGj_00013_mgcj_00015_M2F_gen.wav" type="audio/wav"></audio></td>
+                </tr>
+            
+            
+                <tr>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/wav/2/ref_sour_wav/YzGj_00005_mgcj_00002_M2F_src_gen.wav" type="audio/wav"></audio></td>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/wav/2/FVMVC/YzGj_00005_mgcj_00002_M2F_gen.wav" type="audio/wav"></audio></td>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/wav/2/FVMVC/YzGj_00006_mgcj_00002_M2F_gen.wav" type="audio/wav"></audio></td>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/wav/2/FVMVC/YzGj_00013_mgcj_00002_M2F_gen.wav" type="audio/wav"></audio></td>
+                </tr>
+                </table>
+                <br>
+
+
+                <div style='margin-top:40px'>
+                    <hr>
+                
+                <div class='row' style='margin-top: 20px; margin-bottom: 0px;'>
+                    <p class='h5'>2. Converted utterances by different target speakers.</p>
+                </div>  
+
+                <table stype='width:80%' style="text-align: center;">
+
+                    <tr>
+                    <td><img src="resources/image/2USt_00004.jpg"></td>
+                    <td><img src="resources/image/7kkR_00003.jpg"></td>
+                    <td><img src="resources/image/8vNI_00011.jpg"></td>
+                    <td><img src="resources/image/BImn_00006.jpg"></td>
+                    </tr>
+                    
+                    <tr>
+                    <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/wav/4/2USt_00004_mgcj_00002_M2M_gen.wav" type="audio/wav"></audio></td>
+                    <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/wav/4/7kkR_00003_mgcj_00002_M2F_gen.wav" type="audio/wav"></audio></td>
+                    <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/wav/4/8vNI_00011_mgcj_00002_M2_gen.wav" type="audio/wav"></audio></td>
+                    <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/wav/4/BImn_00006_mgcj_00002_M2F_gen.wav" type="audio/wav"></audio></td>
+                    </tr>
+                    
+                    <tr>
+                    <td><img src="resources/image/cmpu_00004.jpg"></td>
+                    <td><img src="resources/image/ddxH_00002.jpg"></td>
+                    <td><img src="resources/image/FmpI_00005.jpg"></td>
+                    <td><img src="resources/image/KuWX_00004.jpg"></td>
+                    </tr>
+                    
+                    <tr>
+                    <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/wav/4/cmpu_00004_mgcj_00002_M2M_gen.wav" type="audio/wav"></audio></td>
+                    <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/wav/4/ddxH_00002_mgcj_00002_M2F_gen.wav" type="audio/wav"></audio></td>
+                    <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/wav/4/FmpI_00005_mgcj_00002_M2M_gen.wav" type="audio/wav"></audio></td>
+                    <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/wav/4/KuWX_00004_mgcj_00002_M2M_gen.wav" type="audio/wav"></audio></td>
+                    </tr>
+
+
+                </table>
+
+
+                <div style='margin-top:40px'>
+                    <hr>
+                    <div class='row text-center'>
+                        <div class='col'>
+                            <p class='h4 font-weight-bold '>Voice interpolation</p>
+                        </div>
+                    </div>
+
+          
+                <table stype='width:80%' style="text-align: center;">
+
+                    <tr>
+                    <td></td>
+                    <td style="text-align: center;">Speaker A</td>
+                    <td style="text-align: center;">Speaker B</td>
+                    <td></td>
+                    <td style="text-align: center;">Speaker C</td>
+                    <td style="text-align: center;">Speaker D</td>
+                    <td></td>
+                    <td style="text-align: center;">Speaker E</td>
+                    <td style="text-align: center;">Speaker F</td>
+                    </tr>
+                
+                    <tr>
+                    <td></td>
+                    <td><img src="resources/image/7kkR_00003.jpg"></td>
+                    <td><img src="resources/image/9uOM_00001.jpg"></td>
+                    <td></td>
+                    <td><img src="resources/image/E22i_00006.jpg"></td>
+                    <td><img src="resources/image/81Ub_00001.jpg"></td>
+                    <td></td>
+                    <td><img src="resources/image/hilc_00006.jpg"></td>
+                    <td><img src="resources/image/FFG2_00003.jpg"></td>
+                    </tr>
+                
+                    <tr>
+                    <td>A</td>
+                    <td colspan ="2" ><audio controls="" style='display: inline-block; padding:8px; width: 300px; height: 50px;'><source src="resources/wav/3/9uOM_7kkR/mgcj_00002_0.0_gen.wav" type="audio/wav"></audio></td>
+                    <td>C</td>
+                    <td colspan ="2" ><audio controls="" style='display: inline-block; padding:8px; width: 300px; height: 50px;'><source src="resources/wav/3/81Ub_E22i/mgcj_00008_0.0_gen.wav" type="audio/wav"></audio></td>
+                    <td>E</td>
+                    <td colspan ="2" ><audio controls="" style='display: inline-block; padding:8px; width: 300px; height: 50px;'><source src="resources/wav/3/FFG2_hilc/mgcj_00013_0.0_gen.wav" type="audio/wav"></audio></td>
+                    </tr>
+                  
+                
+                
+                    <tr>
+                    <td>0.6A+0.4B</td>
+                    <td colspan ="2" ><audio controls="" style='display: inline-block; padding:8px; width: 300px; height: 50px;'><source src="resources/wav/3/9uOM_7kkR/mgcj_00002_0.3_gen.wav" type="audio/wav"></audio></td>
+                    <td>0.6C+0.4D</td>
+                    <td colspan ="2" ><audio controls="" style='display: inline-block; padding:8px; width: 300px; height: 50px;'><source src="resources/wav/3/81Ub_E22i/mgcj_00008_0.4_gen.wav"  type="audio/wav"></audio></td>
+                    <td>0.6E+0.4F</td>
+                    <td colspan ="2" ><audio controls="" style='display: inline-block; padding:8px; width: 300px; height: 50px;'><source src="resources/wav/3/FFG2_hilc/mgcj_00013_0.2_gen.wav" type="audio/wav"></audio></td>
+                    </tr>
+                  
+                
+                
+                    <tr>
+                    <td>0.4A+0.6B</td>
+                    <td colspan ="2" ><audio controls="" style='display: inline-block; padding:8px; width: 300px; height: 50px;'><source src="resources/wav/3/9uOM_7kkR/mgcj_00002_0.7_gen.wav" type="audio/wav"></audio></td>
+                    <td>0.4C+0.6D</td>
+                    <td colspan ="2" ><audio controls="" style='display: inline-block; padding:8px; width: 300px; height: 50px;'><source src="resources/wav/3/81Ub_E22i/mgcj_00008_0.5_gen.wav"  type="audio/wav"></audio></td>
+                    <td>0.4E+0.6F</td>
+                    <td colspan ="2" ><audio controls="" style='display: inline-block; padding:8px; width: 300px; height: 50px;'><source src="resources/wav/3/FFG2_hilc/mgcj_00013_0.7_gen.wav" type="audio/wav"></audio></td>
+                    </tr>
+                
+                
+                
+                    <tr>
+                    <td>B</td>
+                    <td colspan ="2" ><audio controls="" style='display: inline-block; padding:8px; width: 300px; height: 50px;'><source src="resources/wav/3/9uOM_7kkR/mgcj_00002_1.0_gen.wav" type="audio/wav"></audio></td>
+                    <td>D</td>
+                    <td colspan ="2" ><audio controls="" style='display: inline-block; padding:8px; width: 300px; height: 50px;'><source src="resources/wav/3/81Ub_E22i/mgcj_00008_1.0_gen.wav"  type="audio/wav"></audio></td>
+                    <td>F</td>
+                    <td colspan ="2" ><audio controls="" style='display: inline-block; padding:8px; width: 300px; height: 50px;'><source src="resources/wav/3/FFG2_hilc/mgcj_00013_1.0_gen.wav" type="audio/wav"></audio></td>
+                    </tr>
+                    </table>
+                
+            <hr>
+
+
+            <div style='margin-top:40px'>
+                
+                <div class='row text-center'>
+                    <div class='col'>
+                        <p class='h4 font-weight-bold '>Converted Utterance Examples on other dataset</p>
+                    </div>
+                </div>
+                <div class='row' style='margin-top: 20px; margin-bottom: 0px;'>
+                    <p class='h5'>Converted utterances by the pre-trained proposed FVMVC of LRS3 dataset on the VGGFace2 and Voxceleb2.</p>
+                </div>  
+
+                <table stype='width:80%' style="text-align: center;">
+
+                <tr>
+                <td style="text-align: center;">Source Speaker</td>
+                <td style="text-align: center;">Target Speaker Image1</td>
+                <td style="text-align: center;">Target Speaker Image2</td>
+                <td style="text-align: center;">Target Speaker Image3</td>
+                </tr>
+            
+                <tr>
+                <td><img src="resources/vgg_demo/ori_image/00169.jpg" width="128" height="128"></td>
+                <td><img src="resources/vgg_demo/ori_image/M_01174(1).jpg" width="128" height="128"></td>
+                <td><img src="resources/vgg_demo/ori_image/M_01174(3).jpg" width="128" height="128"></td>
+                <td><img src="resources/vgg_demo/ori_image/M_01174(5).jpg" width="128" height="128"></td>
+                </tr>
+            
+                <tr>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/vgg_demo/source_wav/M_00169(1).wav" type="audio/wav"></audio></td>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/vgg_demo/converted_wav/01174_1_00169_1_M2M_gen.wav" type="audio/wav"></audio></td>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/vgg_demo/converted_wav/01174_3_00169_1_M2M_gen.wav" type="audio/wav"></audio></td>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/vgg_demo/converted_wav/01174_5_00169_1_M2M_gen.wav" type="audio/wav"></audio></td>
+                </tr>
+            
+                </table>
+                
+                <table stype='width:80%' style="text-align: center;">
+
+                <tr>
+                <td style="text-align: center;">Source Speaker</td>
+                <td style="text-align: center;">Target Speaker Image1</td>
+                <td style="text-align: center;">Target Speaker Image2</td>
+                <td style="text-align: center;">Target Speaker Image3</td>
+                </tr>
+            
+                <tr>
+                <td><img src="resources/vgg_demo/ori_image/00420.jpg" width="128" height="128"></td>
+                <td><img src="resources/vgg_demo/ori_image/F_01395(1).jpg" width="128" height="128"></td>
+                <td><img src="resources/vgg_demo/ori_image/F_01395(2).jpg" width="128" height="128"></td>
+                <td><img src="resources/vgg_demo/ori_image/F_01395(3).jpg" width="128" height="128"></td>
+                </tr>
+            
+                <tr>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/vgg_demo/source_wav/F_00420(2).wav" type="audio/wav"></audio></td>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/vgg_demo/converted_wav/01395_1_00420_2_F2F_gen.wav" type="audio/wav"></audio></td>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/vgg_demo/converted_wav/01395_2_00420_2_F2F_gen.wav" type="audio/wav"></audio></td>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/vgg_demo/converted_wav/01395_3_00420_2_F2F_gen.wav" type="audio/wav"></audio></td>
+                </tr>
+                </table>
+                        
+
+                </table>
+                <table stype='width:80%' style="text-align: center;">
+                <tr>
+                <td style="text-align: center;">Source Speaker</td>
+                <td style="text-align: center;">Target Speaker Image1</td>
+                <td style="text-align: center;">Target Speaker Image2</td>
+                <td style="text-align: center;">Target Speaker Image3</td>
+                </tr>
+            
+                <tr>
+                <td><img src="resources/vgg_demo/ori_image/00420.jpg" width="128" height="128"></td>
+                <td><img src="resources/vgg_demo/ori_image/M_00164(2).jpg" width="128" height="128"></td>
+                <td><img src="resources/vgg_demo/ori_image/M_00164(3).jpg" width="128" height="128"></td>
+                <td><img src="resources/vgg_demo/ori_image/M_00164(6).jpg" width="128" height="128"></td>
+                </tr>
+            
+                <tr>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/vgg_demo/source_wav/F_00420(1).wav" type="audio/wav"></audio></td>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/vgg_demo/converted_wav/00164_2_00420_1_F2M_gen.wav" type="audio/wav"></audio></td>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/vgg_demo/converted_wav/00164_3_00420_1_F2M_gen.wav" type="audio/wav"></audio></td>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/vgg_demo/converted_wav/00164_6_00420_1_F2M_gen.wav" type="audio/wav"></audio></td>
+                </tr>
+            
+                </table>
+
+                </table>
+                <table stype='width:80%' style="text-align: center;">
+                <tr>
+                <td style="text-align: center;">Source Speaker</td>
+                <td style="text-align: center;">Target Speaker Image1</td>
+                <td style="text-align: center;">Target Speaker Image2</td>
+                <td style="text-align: center;">Target Speaker Image3</td>
+                </tr>
+            
+                <tr>
+                <td><img src="resources/vgg_demo/ori_image/00184.jpg" width="128" height="128"></td>
+                <td><img src="resources/vgg_demo/ori_image/F_01424(1).jpg" width="128" height="128"></td>
+                <td><img src="resources/vgg_demo/ori_image/F_01424(4).jpg" width="128" height="128"></td>
+                <td><img src="resources/vgg_demo/ori_image/F_01424(2).jpg" width="128" height="128"></td>
+                </tr>
+            
+                <tr>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/vgg_demo/source_wav/M_00184(2).wav" type="audio/wav"></audio></td>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/vgg_demo/converted_wav/01424_1_00184_2_M2F_gen.wav" type="audio/wav"></audio></td>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/vgg_demo/converted_wav/01424_4_00184_2_M2F_gen.wav" type="audio/wav"></audio></td>
+                <td><audio controls="" style='display: inline-block; padding:8px; width: 280px; height: 50px;'><source src="resources/vgg_demo/converted_wav/01424_5_00184_2_M2F_gen.wav" type="audio/wav"></audio></td>
+                </tr>
+            
+                </table>
+            
+        <hr>
+
+                <!-- Optional JavaScript -->
+                <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+                <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+                    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+                    crossorigin="anonymous"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+                    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+                    crossorigin="anonymous"></script>
+                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+                    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+                    crossorigin="anonymous"></script>
+</body>
+
+</html>
